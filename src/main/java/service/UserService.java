@@ -24,8 +24,7 @@ public class UserService {
 
 
     public List<User> getAllUsers() {
-        ArrayList<User> usersList = new ArrayList<>(dataBase.values());
-        return usersList;
+        return new ArrayList<>(dataBase.values());
     }
 
     public User getUserById(Long id) {
@@ -48,19 +47,13 @@ public class UserService {
     public boolean isExistsThisUser(User user) {
         boolean check = false;
         for (Map.Entry<Long, User> entry : dataBase.entrySet()){
-            if (user.getEmail().equals(entry.getValue().getEmail())){
-                check = true;
-            }
-            else{
-                check = false;
-            }
+            check = user.getEmail().equals(entry.getValue().getEmail()) && user.getPassword().equals(entry.getValue().getPassword());
         }
         return check;
     }
 
     public List<User> getAllAuth() {
-        ArrayList<User> authList = new ArrayList<>(authMap.values());
-        return authList;
+        return new ArrayList<>(authMap.values());
     }
 
     public boolean authUser(User user) {
@@ -78,7 +71,7 @@ public class UserService {
 
     public boolean isUserAuthById(Long id) {
         boolean check = false;
-        User user = null;
+        User user;
         user = authMap.get(id);
         if (user != null){
             check = true;

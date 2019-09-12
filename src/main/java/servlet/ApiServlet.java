@@ -49,12 +49,10 @@ public class ApiServlet extends HttpServlet {
         String password = req.getParameter("password");
         String email = req.getParameter("email");
         if (req.getRequestURL().toString().contains("register")){
-            RegistrationServlet registrationServlet = new RegistrationServlet();
-            registrationServlet.doPost(req, resp);
+            resp.sendRedirect("/register");
         }
         if (req.getRequestURL().toString().contains("login")){
-           LoginServlet loginServlet = new LoginServlet();
-           loginServlet.doPost(req, resp);
+            resp.sendRedirect("/login");
         }
 
         resp.setStatus(HttpServletResponse.SC_OK);
