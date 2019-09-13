@@ -14,6 +14,8 @@ public class UserService {
     /* список авторизованных пользователей */
     private Map<Long, User> authMap = Collections.synchronizedMap(new HashMap<>());
     /* Singletone */
+    long userId = 0;
+    long checkForId;
     private static class UserServiceHolder{
         private final static UserService instance = new UserService();
     }
@@ -34,7 +36,8 @@ public class UserService {
     public boolean addUser(User user) {
         boolean check = false;
         if (!isExistsThisUser(user)){
-            dataBase.put(maxId.incrementAndGet(), user);
+            User userWithId = new User(++userId, user.getEmail(), user.getPassword());
+            dataBase.put(maxId.incrementAndGet(), userWithId);
             check = true;
         }
         return check;
@@ -47,7 +50,10 @@ public class UserService {
     public boolean isExistsThisUser(User user) {
         boolean check = false;
         for (Map.Entry<Long, User> entry : dataBase.entrySet()){
-            check = user.getEmail().equals(entry.getValue().getEmail()) && user.getPassword().equals(entry.getValue().getPassword());
+            if (user.getEmail().equals(entry.getValue().getEmail()) && user.getPassword().equals(entry.getValue().getPassword())) {
+                checkForId = entry.getValue().getId();
+                check = true;
+            }
         }
         return check;
     }
@@ -58,8 +64,9 @@ public class UserService {
 
     public boolean authUser(User user) {
         boolean check = false;
-        if (!isUserAuthById(user.getId()) && isExistsThisUser(user)){
-            authMap.put(maxId.incrementAndGet(), user);
+        if (isExistsThisUser(user) && !isUserAuthById(checkForId)){
+            User userWithId = new User(checkForId, user.getEmail(), user.getPassword());
+            authMap.put(checkForId, userWithId);
             check = true;
         }
         return check;
@@ -71,10 +78,11 @@ public class UserService {
 
     public boolean isUserAuthById(Long id) {
         boolean check = false;
-        User user;
-        user = authMap.get(id);
-        if (user != null){
-            check = true;
+        for (Map.Entry<Long, User> entry : authMap.entrySet()){
+            if (id.equals(entry.getKey())) {
+                check = true;
+                break;
+            }
         }
         return check;
     }

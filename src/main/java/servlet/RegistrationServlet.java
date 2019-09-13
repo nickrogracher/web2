@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegistrationServlet extends HttpServlet {
+    private long idCount = 0;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
