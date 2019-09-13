@@ -25,13 +25,13 @@ public class ApiServlet extends HttpServlet {
         String json = "";
 
         String path = req.getRequestURL().toString();
-        if (path.contains("login")) {
+        if (path.contains("auth")) {
             if (id == null) {
                 json = gson.toJson(UserService.getInstance().getAllAuth());
             } else {
                 json = gson.toJson(UserService.getInstance().isUserAuthById(id));
             }
-        } else if (path.contains("register")) {
+        } else if (path.contains("reg")) {
             if (id == null) {
                 json = gson.toJson(UserService.getInstance().getAllUsers());
             } else {
@@ -48,13 +48,7 @@ public class ApiServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-        if (req.getRequestURL().toString().contains("register")){
-            resp.sendRedirect("/register");
-        }
-        if (req.getRequestURL().toString().contains("login")){
-            resp.sendRedirect("/login");
-        }
-
+        UserService.getInstance().authUser(new User(email, password));
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 
