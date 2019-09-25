@@ -14,7 +14,6 @@ public class UserService {
     /* список авторизованных пользователей */
     private Map<Long, User> authMap = Collections.synchronizedMap(new HashMap<>());
     /* Singletone */
-    long userId = 0;
     long checkForId;
     private static class UserServiceHolder{
         private final static UserService instance = new UserService();
@@ -36,8 +35,8 @@ public class UserService {
     public boolean addUser(User user) {
         boolean check = false;
         if (!isExistsThisUser(user)){
-            User userWithId = new User(++userId, user.getEmail(), user.getPassword());
-            dataBase.put(maxId.incrementAndGet(), userWithId);
+            User userWithId = new User(maxId.incrementAndGet(), user.getEmail(), user.getPassword());
+            dataBase.put(userWithId.getId(), userWithId);
             check = true;
         }
         return check;
